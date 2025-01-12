@@ -109,15 +109,15 @@ const FeaturedBlog = () => {
     >
       <div className="flex w-full justify-between">
         <div className="flex w-1/2 flex-col gap-5">
-          <div className="mr-auto rounded-full bg-white/15 p-2 px-4 text-center backdrop-blur-lg">
-            <p className="text-sm font-medium tracking-wide text-white">
+          <div className="mr-auto rounded-full bg-white/15 p-1 px-2 text-center backdrop-blur-lg md:p-2 md:px-4">
+            <p className="text-[11px] font-medium tracking-wide text-white md:text-sm">
               {featuredBlogs[currentIndex].category}
             </p>
           </div>
-          <h1 className="text-3xl font-semibold text-white">
+          <h1 className="text-xl font-semibold text-white md:text-3xl">
             {featuredBlogs[currentIndex].title}
           </h1>
-          <p className="line-clamp-3 w-[60%] text-white">
+          <p className="line-clamp-3 w-full text-sm text-white md:w-[60%] md:text-base">
             {featuredBlogs[currentIndex].content}
           </p>
           <div className="flex items-center gap-2">
@@ -129,7 +129,7 @@ const FeaturedBlog = () => {
             ))}
           </div>
         </div>
-        <div className="mr-3 flex w-1/2 items-center justify-end font-medium text-white">
+        <div className="mr-3 hidden w-1/2 items-center justify-end font-medium text-white md:flex">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <img
@@ -142,7 +142,7 @@ const FeaturedBlog = () => {
             <p className="text-xs">
               {format(
                 new Date(featuredBlogs[currentIndex].$createdAt),
-                'MMMM d, yyyy, h:mm a',
+                'MMMM d, yyyy',
               )}
             </p>
           </div>

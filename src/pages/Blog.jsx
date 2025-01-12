@@ -136,12 +136,12 @@ const Blog = () => {
   }
 
   return (
-    <section className="flex min-h-screen animate-slideup flex-col gap-10 px-28 py-10">
-      <div className="flex gap-7">
-        <div className="flex w-3/4 flex-col space-y-10">
+    <section className="flex min-h-screen animate-slideup flex-col gap-10 px-4 py-10 md:px-10 lg:px-28">
+      <div className="flex flex-col gap-7 lg:flex-row">
+        <div className="flex w-full flex-col space-y-10 lg:w-3/4">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
-              <h1 className="text-5xl font-semibold capitalize">
+              <h1 className="text-3xl font-semibold capitalize md:text-4xl lg:text-5xl">
                 {result.title}
               </h1>
               <FiHeart
@@ -166,29 +166,42 @@ const Blog = () => {
             <img
               src={result.featuredImageUrl}
               alt=""
-              className="mt-4 h-[60vh] rounded-lg"
+              className="mt-4 h-[30vh] rounded-lg md:h-[45vh] lg:h-[60vh]"
             />
             <p className="mt-5">{result.content}</p>
+          </div>
+          <div className="flex w-full flex-col items-start gap-5 pt-10 lg:hidden lg:w-1/4">
+            <h4 className="rounded-full bg-gray-300 p-1 px-2 text-center text-sm font-medium md:p-2 md:px-4 md:text-base">
+              {result.category}
+            </h4>
+            <div className="flex items-center gap-5">
+              <img
+                src={result.authorImage}
+                alt=""
+                className="h-14 w-14 rounded-full"
+              />
+              <p className="font-medium">{result.author}</p>
+            </div>
           </div>
           <div className="flex flex-col gap-5 border-t border-t-gray-200 py-3">
             {allResult.map((blog) => (
               <div
                 key={blog.$id}
-                className="flex gap-5 border-b border-b-gray-200 py-5"
+                className="flex flex-col gap-5 border-b border-b-gray-200 py-5 md:flex-row"
               >
                 <img
                   src={blog.featuredImageUrl}
                   alt=""
-                  className="h-[30vh] w-1/3 rounded-lg"
+                  className="h-[20vh] w-full rounded-lg md:h-[30vh] md:w-1/3"
                 />
-                <div className="flex w-2/3 flex-col gap-2">
+                <div className="flex w-full flex-col gap-2 md:w-2/3">
                   <p className="text-sm">
                     {format(
                       new Date(blog.$createdAt),
                       'MMMM d, yyyy',
                     ).toUpperCase()}
                   </p>
-                  <h1 className="text-xl font-medium capitalize">
+                  <h1 className="text-lg font-medium capitalize md:text-xl">
                     {blog.title}
                   </h1>
                   <p className="line-clamp-3">{blog.content}</p>
@@ -198,8 +211,8 @@ const Blog = () => {
           </div>
         </div>
 
-        <div className="flex w-1/4 flex-col items-start gap-5 pt-10">
-          <h4 className="rounded-full bg-gray-300 p-2 px-4 text-center font-medium">
+        <div className="hidden w-full flex-col items-start gap-5 pt-10 lg:flex lg:w-1/4">
+          <h4 className="rounded-full bg-gray-300 p-1 px-2 text-center text-sm font-medium md:p-2 md:px-4 md:text-base">
             {result.category}
           </h4>
           <div className="flex items-center gap-5">

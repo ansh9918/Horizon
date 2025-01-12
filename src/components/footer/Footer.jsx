@@ -11,7 +11,7 @@ import Input from '../Input';
 const Footer = () => {
   return (
     <footer className="flex flex-col gap-5 rounded-lg bg-black p-4 text-white">
-      <div className="flex items-center justify-between gap-6">
+      <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
         {/* First Container */}
         <div className="flex flex-1 basis-1/3 flex-col gap-3">
           <h1 className="text-2xl font-bold">Horizon</h1>
@@ -24,7 +24,7 @@ const Footer = () => {
         </div>
 
         {/* Second Container */}
-        <div className="flex flex-1 basis-1/6 flex-col items-center">
+        <div className="hidden flex-1 basis-1/6 flex-col items-center md:flex">
           <div className="flex flex-col gap-3">
             <h2>About</h2>
             <ul className="space-y-2 text-sm text-gray-400">
@@ -36,7 +36,7 @@ const Footer = () => {
         </div>
 
         {/* Third Container */}
-        <div className="flex flex-1 basis-1/6 flex-col items-center">
+        <div className="hidden flex-1 basis-1/6 flex-col items-center md:flex">
           <div className="flex flex-col gap-3">
             <h2>Support</h2>
             <ul className="space-y-2 text-sm text-gray-400">

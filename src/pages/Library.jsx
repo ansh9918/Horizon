@@ -82,12 +82,14 @@ const Library = () => {
   }, [userData]);
 
   return (
-    <div className="min-h-screen space-y-14 p-4 py-6">
+    <div className="h-auto space-y-14 p-4 py-6 transition-all duration-300">
       <div
         onClick={() => setShowLibrary(!showLibrary)}
-        className="flex w-full items-center justify-between rounded-lg border-b border-b-gray-300 p-2 shadow-md hover:bg-gray-100"
+        className="flex w-full items-center justify-between rounded-lg border-b border-b-gray-300 p-1 shadow-md hover:bg-gray-100 lg:p-2"
       >
-        <h1 className="text-2xl font-semibold">Library: </h1>
+        <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
+          Library:{' '}
+        </h1>
         {showLibrary ? (
           <BiChevronUp className="text-2xl" />
         ) : (
@@ -95,7 +97,7 @@ const Library = () => {
         )}
       </div>
       {showLibrary && (
-        <div className="mt-2 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-2 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
           {libraryBlogs.map((blog) => (
             <BlogCard key={blog.$id} blog={blog} />
           ))}
@@ -104,9 +106,11 @@ const Library = () => {
 
       <div
         onClick={() => setShowYourBlogs(!showYourBlogs)}
-        className="flex w-full items-center justify-between rounded-lg border-b border-b-gray-300 p-2 shadow-md hover:bg-gray-100"
+        className="flex w-full items-center justify-between rounded-lg border-b border-b-gray-300 p-1 shadow-md hover:bg-gray-100 lg:p-2"
       >
-        <h1 className="text-2xl font-semibold">Your Blogs: </h1>
+        <h1 className="text-lg font-semibold md:text-xl lg:text-2xl">
+          Your Blogs:{' '}
+        </h1>
         {showYourBlogs ? (
           <BiChevronUp className="text-2xl" />
         ) : (

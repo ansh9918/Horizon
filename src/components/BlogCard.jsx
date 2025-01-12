@@ -8,25 +8,31 @@ import { toast } from 'react-toastify';
 import Button from './Button';
 
 const BlogCard = ({ blog, showEditButton }) => {
-  console.log(blog);
   const userData = useSelector((state) => state.auth.userData);
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    const checkFavorite = async () => {
-      try {
-        const favorites = await service.getFavouriteBlogs(userData.$id);
-        const isFav = favorites.some((fav) => fav.$id === blog.$id);
-        setIsFavorite(isFav);
-      } catch (error) {
-        console.error('Error checking favorites:', error);
-      }
-    };
+    if (userData?.$id && blog?.$id) {
+      const checkFavorite = async () => {
+        try {
+          const favorites = await service.getFavouriteBlogs(userData.$id);
+          const isFav = favorites.some((fav) => fav.$id === blog.$id);
+          setIsFavorite(isFav);
+        } catch (error) {
+          console.error('Error checking favorites:', error);
+        }
+      };
 
-    checkFavorite();
-  }, [blog.$id, userData.$id]);
+      checkFavorite();
+    }
+  }, [blog?.$id, userData?.$id]);
 
   const addFavourite = async () => {
+    if (!userData?.$id || !blog?.$id) {
+      console.error('User data or blog data is missing');
+      return;
+    }
+
     try {
       if (isFavorite) {
         await service.removeFavouriteBlogs(userData.$id, blog.$id);
@@ -44,31 +50,37 @@ const BlogCard = ({ blog, showEditButton }) => {
 
   return (
     <Link to={`/post/${blog.slug}`}>
-      <div className="relative flex w-full cursor-pointer flex-col gap-2 rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md">
+      <div className="relative flex w-full cursor-pointer flex-col gap-1 rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md lg:gap-2">
         <img
           src={blog.featuredImageUrl}
           alt=""
-          className="h-44 w-full rounded-lg object-cover"
+          className="h-28 rounded-lg object-cover md:h-32 md:w-full lg:h-44"
         />
-        <p className="text-sm font-medium text-gray-500">
+        <p className="text-[11px] font-medium text-gray-500 md:text-sm">
           {blog.$createdAt
             ? format(new Date(blog.$createdAt), 'MMMM d, yyyy')
             : 'Unknown Date'}
         </p>
-        <h1 className="text-2xl font-semibold text-gray-800">{blog.title}</h1>
-        <p className="line-clamp-3 leading-6 text-gray-700">{blog.content}</p>
+        <h1 className="text-lg font-semibold text-gray-800 md:text-xl lg:text-2xl">
+          {blog.title}
+        </h1>
+        <p className="leading-2 line-clamp-3 text-sm text-gray-700 md:text-base md:leading-6">
+          {blog.content}
+        </p>
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img
               src={blog.authorImage}
               alt=""
-              className="h-12 w-12 rounded-full"
+              className="h-8 w-8 rounded-full md:h-12 md:w-12"
             />
-            <p className="font-medium text-gray-800">{blog.author}</p>
+            <p className="text-sm font-medium text-gray-800 md:text-base">
+              {blog.author}
+            </p>
           </div>
 
           <FiHeart
-            className={`h-5 w-5 cursor-pointer text-2xl transition-colors ${
+            className={`h-4 w-4 cursor-pointer text-2xl transition-colors md:h-5 md:w-5 ${
               isFavorite ? 'fill-red-700 text-red-700' : 'bg-transparent'
             }`}
             onClick={(e) => {
@@ -78,7 +90,9 @@ const BlogCard = ({ blog, showEditButton }) => {
           />
         </div>
         <div className="absolute left-6 top-6 rounded-full bg-white/20 p-1 px-2 backdrop-blur-lg">
-          <p className="text-sm font-medium text-white">{blog.category}</p>
+          <p className="text-xs font-medium text-white md:text-sm">
+            {blog.category}
+          </p>
         </div>
         {showEditButton && (
           <Link to={`/edit-post/${blog.slug}`} className="mx-auto">

@@ -33,18 +33,22 @@ const About = () => {
   };
 
   return (
-    <section className="h-screen">
-      <div className="container mx-auto w-1/2 animate-slideup p-4">
-        <h1 className="mb-4 text-4xl font-bold">About Us</h1>
-        <p className="mb-4">
+    <section className="min-h-screen">
+      <div className="container mx-auto animate-slideup p-4 sm:w-3/4 md:w-2/3 lg:w-1/2">
+        <h1 className="mb-4 text-2xl font-bold sm:text-3xl md:text-4xl">
+          About Us
+        </h1>
+        <p className="mb-4 text-sm sm:text-base md:text-lg">
           Welcome to our blog! We are dedicated to providing you with the latest
           news, insights, and tips on various topics. Our team of experienced
           writers works tirelessly to bring you high-quality content that is
           both informative and engaging.
         </p>
-        <h2 className="mb-2 text-2xl font-bold">Contact Us</h2>
+        <h2 className="mb-2 text-xl font-bold sm:text-2xl md:text-3xl">
+          Contact Us
+        </h2>
         <form
-          className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md"
+          className="mb-4 rounded bg-white px-4 pb-8 pt-6 shadow-md sm:px-6 md:px-8"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="mb-4">

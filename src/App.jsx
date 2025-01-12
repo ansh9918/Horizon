@@ -16,24 +16,18 @@ function App() {
       try {
         // Step 2: Fetch the authenticated user's account
         const user = await authService.getCurrentUser();
-        console.log('Authenticated user:', user);
 
-        let userData;
         if (user) {
-          userData = await service.getUser(
-            // Filter documents by user ID
-            user.$id,
+          const userData = await service.getUser(user.$id);
+          dispatch(
+            login({
+              userData: userData,
+            }),
           );
         }
-
-        console.log('User collection data:', userData);
-
-        // Step 4: Dispatch the user's account and document data to the Redux store
-        dispatch(
-          login({
-            userData: userData,
-          }),
-        );
+        if (!user) {
+          dispatch(logout());
+        }
       } catch (error) {
         if (error.code === 401) {
           console.warn('No active session found. Logging out...');
@@ -59,7 +53,7 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col gap-2 overflow-hidden p-2 font-volte">
+      <div className="relative flex flex-col gap-2 overflow-hidden p-2 font-volte">
         <Header />
         <Outlet />
         <Footer />
