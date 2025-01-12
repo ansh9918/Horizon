@@ -40,8 +40,10 @@ const Header = () => {
     const fetchFilePreview = async () => {
       try {
         // Get the file preview URL
-        const url = await service.getfilePreview(userData.profilePhoto); // Returns a Promise
-        setFileUrl(url);
+        if (userData.profilePhoto) {
+          const url = await service.getfilePreview(userData.profilePhoto); // Returns a Promise
+          setFileUrl(url);
+        }
       } catch (error) {
         console.error('Error fetching file preview:', error);
       }
@@ -96,7 +98,7 @@ const Header = () => {
         }}
         placeholder={'Search Blog..'}
         className={
-          'rounded-lg bg-white/20 p-1 text-xs font-medium text-black placeholder-gray-500 placeholder:text-xs md:rounded-r-none md:px-3 md:placeholder:text-sm'
+          'rounded-lg bg-white/20 p-1 text-xs font-medium text-black placeholder-gray-500 placeholder:text-xs md:rounded-r-none md:p-2 md:px-3 md:placeholder:text-sm'
         }
       />
       <Button
