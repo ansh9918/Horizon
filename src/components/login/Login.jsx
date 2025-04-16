@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { login } from '../../redux/AuthSlice';
+import service from '../../appwrite/service';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -32,8 +33,9 @@ const Login = () => {
         email,
         password,
       });
-
-      dispatch(login(user));
+      const userdata = await service.getUser(user.$id);
+      //console.log(userdata);
+      dispatch(login(userdata));
       navigate('/');
 
       reset();

@@ -19,13 +19,9 @@ function App() {
 
         if (user) {
           const userData = await service.getUser(user.$id);
-          dispatch(
-            login({
-              userData: userData,
-            }),
-          );
-        }
-        if (!user) {
+          // console.log(userData);
+          dispatch(login(userData));
+        } else {
           dispatch(logout());
         }
       } catch (error) {

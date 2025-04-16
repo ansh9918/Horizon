@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { FiHeart } from 'react-icons/fi';
+import HTMLReactParser from 'html-react-parser/lib/index';
 
 const Blog = () => {
   const [loading, setLoading] = useState(true);
@@ -135,6 +136,8 @@ const Blog = () => {
     return <Loader />;
   }
 
+  console.log(result.content);
+
   return (
     <section className="flex min-h-screen animate-slideup flex-col gap-10 px-4 py-10 md:px-10 lg:px-28">
       <div className="flex flex-col gap-7 lg:flex-row">
@@ -168,7 +171,7 @@ const Blog = () => {
               alt=""
               className="mt-4 h-[30vh] rounded-lg md:h-[45vh] lg:h-[60vh]"
             />
-            <p className="mt-5">{result.content}</p>
+            <div className="prose">{HTMLReactParser(result.content)}</div>
           </div>
           <div className="flex w-full flex-col items-start gap-5 pt-10 lg:hidden lg:w-1/4">
             <h4 className="rounded-full bg-gray-300 p-1 px-2 text-center text-sm font-medium md:p-2 md:px-4 md:text-base">
@@ -192,7 +195,7 @@ const Blog = () => {
                 <img
                   src={blog.featuredImageUrl}
                   alt=""
-                  className="h-[20vh] w-full rounded-lg md:h-[30vh] md:w-1/3"
+                  className="h-[20vh] w-full rounded-lg md:h-[25vh] md:w-1/3"
                 />
                 <div className="flex w-full flex-col gap-2 md:w-2/3">
                   <p className="text-sm">
@@ -204,7 +207,9 @@ const Blog = () => {
                   <h1 className="text-lg font-medium capitalize md:text-xl">
                     {blog.title}
                   </h1>
-                  <p className="line-clamp-3">{blog.content}</p>
+                  <div className="prose line-clamp-3">
+                    {HTMLReactParser(blog.content)}
+                  </div>
                 </div>
               </div>
             ))}

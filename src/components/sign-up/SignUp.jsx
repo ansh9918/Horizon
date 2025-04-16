@@ -43,6 +43,7 @@ const SignUp = () => {
       let fileUpload;
       if (avatar.file) {
         fileUpload = await service.UploadFile(avatar.file);
+        console.log(fileUpload);
         if (fileUpload.error) {
           toast.error(fileUpload.error.message);
           return;
@@ -56,7 +57,7 @@ const SignUp = () => {
         password,
         profilePhoto: fileUpload ? fileUpload.$id : null,
       });
-
+      console.log(user);
       dispatch(loginStore(user));
       navigate('/');
 
@@ -90,7 +91,7 @@ const SignUp = () => {
             <div className="flex flex-col justify-center gap-4">
               <div className="flex items-center justify-center gap-5">
                 <img
-                  src={avatar.url || '/src/assets/avatar.png'}
+                  src={avatar.url || './assets/avatar.png'}
                   className="h-12 w-12 rounded-full object-cover"
                   alt=""
                 />

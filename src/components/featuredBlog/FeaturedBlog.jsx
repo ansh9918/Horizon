@@ -11,20 +11,12 @@ const FeaturedBlog = () => {
 
   useEffect(() => {
     const fetchFeaturedBlogs = async () => {
-      const cachedBlogs = JSON.parse(localStorage.getItem('featuredBlogs'));
-      const lastFetchedDate = localStorage.getItem('lastFetchedDate');
-      const today = new Date().toISOString().split('T')[0]; // Get today's date
-
-      if (cachedBlogs && lastFetchedDate === today) {
-        setFeaturedBlogs(cachedBlogs);
-        setLoading(false);
-        return;
-      }
       try {
         const response = await service.getPosts([
           Query.orderDesc('$createdAt'), // Order by createdAt descending
           Query.limit(3), // Limit to 3 documents
         ]);
+        //console.log(response);
         const blogsWithPreviews = await Promise.all(
           response.documents.map(async (blog) => {
             try {
@@ -32,6 +24,7 @@ const FeaturedBlog = () => {
               const featuredImageUrl = await service.getfilePreview(
                 blog.featuredImage,
               );
+              //console.log(featuredImageUrl);
 
               // Fetch the user details
               const user = await service.getUser(blog.userId);
@@ -59,40 +52,26 @@ const FeaturedBlog = () => {
 
         setFeaturedBlogs(blogsWithPreviews);
         setLoading(false);
-        localStorage.setItem(
-          'featuredBlogs',
-          JSON.stringify(blogsWithPreviews),
-        );
-        localStorage.setItem('lastFetchedDate', today);
       } catch (error) {
         console.error('Error fetching featured blogs:', error);
         setLoading(false);
       }
     };
-    console.log('info:', featuredBlogs);
+    //console.log('info:', featuredBlogs);
 
     fetchFeaturedBlogs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (!loading && featuredBlogs.length > 0) {
       const interval = setInterval(() => {
-        setCurrentIndex((prev) => {
-          if (prev === featuredBlogs.length - 1) {
-            return 0;
-          }
-
-          return prev + 1;
-        });
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % featuredBlogs.length);
       }, 5000);
 
-      return () => {
-        clearInterval(interval);
-      };
+      return () => clearInterval(interval);
     }
   }, [loading, featuredBlogs]);
-
+  //console.log(currentIndex, featuredBlogs[currentIndex]?.featuredImageUrl);
   if (loading) {
     return (
       <div>
@@ -100,25 +79,28 @@ const FeaturedBlog = () => {
       </div>
     );
   }
+
   return (
     <section
       className="flex h-[80vh] w-full animate-slowfade items-end rounded-lg bg-cover object-cover p-4 py-6 transition-all duration-1000"
       style={{
-        backgroundImage: `url(${featuredBlogs[currentIndex].featuredImageUrl})`,
+        backgroundImage: `url(${featuredBlogs[currentIndex]?.featuredImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <div className="flex w-full justify-between">
         <div className="flex w-1/2 flex-col gap-5">
-          <div className="mr-auto rounded-full bg-white/15 p-1 px-2 text-center backdrop-blur-lg md:p-2 md:px-4">
+          <div className="mr-auto rounded-full bg-white/15 px-2 text-center backdrop-blur-lg md:p-2 md:px-4">
             <p className="text-[11px] font-medium tracking-wide text-white md:text-sm">
-              {featuredBlogs[currentIndex].category}
+              {featuredBlogs[currentIndex]?.category}
             </p>
           </div>
           <h1 className="text-xl font-semibold text-white md:text-3xl">
-            {featuredBlogs[currentIndex].title}
+            {featuredBlogs[currentIndex]?.title}
           </h1>
           <p className="line-clamp-3 w-full text-sm text-white md:w-[60%] md:text-base">
-            {featuredBlogs[currentIndex].content}
+            {featuredBlogs[currentIndex]?.content}
           </p>
           <div className="flex items-center gap-2">
             {featuredBlogs.map((_, index) => (
@@ -133,16 +115,20 @@ const FeaturedBlog = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <img
-                src={featuredBlogs[currentIndex].authorImage}
+                src={featuredBlogs[currentIndex]?.authorImage}
                 alt="Author"
                 className="h-10 w-10 rounded-full bg-cover bg-center"
               />
-              <h1 className="">{featuredBlogs[currentIndex].author}</h1>
+              <h1 className="">{featuredBlogs[currentIndex]?.author}</h1>
             </div>
             <p className="text-xs">
-              {format(
-                new Date(featuredBlogs[currentIndex].$createdAt),
-                'MMMM d, yyyy',
+              {featuredBlogs[currentIndex]?.$createdAt ? (
+                format(
+                  new Date(featuredBlogs[currentIndex]?.$createdAt),
+                  'MMMM d, yyyy',
+                )
+              ) : (
+                <p></p>
               )}
             </p>
           </div>

@@ -7,50 +7,44 @@ import { useDispatch } from 'react-redux';
 import authService from '../../appwrite/auth';
 import { logout } from '../../redux/AuthSlice';
 import service from '../../appwrite/service';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { IoClose } from 'react-icons/io5';
 
 const Header = () => {
   const authStatus = useSelector((state) => state.auth.status);
   const userData = useSelector((state) => state.auth.userData);
-  const [search, setSearch] = useState('');
-  const [showOptions, setShowOptions] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const navItems = [
-    {
-      name: 'Home',
-      slug: '/',
-      active: true,
-    },
-    {
-      name: 'About Us',
-      slug: '/about-us',
-      active: true,
-    },
-    {
-      name: 'All Blogs',
-      slug: '/all-blogs',
-      active: true,
-    },
-  ];
+
+  const [search, setSearch] = useState('');
+  const [showOptions, setShowOptions] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
 
+  const navItems = [
+    { name: 'Home', slug: '/', active: true },
+    { name: 'About Us', slug: '/about-us', active: true },
+    { name: 'All Blogs', slug: '/all-blogs', active: true },
+  ];
+  // console.log(userData?.name);
+  // console.log(authStatus);
+
+  // ✅ Properly watch only userData
   useEffect(() => {
     const fetchFilePreview = async () => {
       try {
-        // Get the file preview URL
         if (userData.profilePhoto) {
-          const url = await service.getfilePreview(userData.profilePhoto); // Returns a Promise
+          const url = await service.getfilePreview(userData.profilePhoto);
           setFileUrl(url);
         }
+
+        // console.log(fileUrl);
       } catch (error) {
         console.error('Error fetching file preview:', error);
       }
     };
 
     fetchFilePreview();
-  });
+  }, [userData]);
 
   const handleSearch = () => {
     if (search.trim()) {
@@ -70,6 +64,7 @@ const Header = () => {
     }
   };
 
+  // Memoized render functions
   const renderNavItems = () => (
     <ul className="text-md hidden transition-all duration-500 md:gap-5 lg:flex lg:gap-10">
       {navItems.map((item) =>
@@ -108,7 +103,7 @@ const Header = () => {
         }
       >
         <img
-          src="/assets/search.png"
+          src="./assets/search.png"
           alt="Search"
           className={'h-3 w-3 md:h-5 md:w-5'}
         />
@@ -119,11 +114,11 @@ const Header = () => {
   const infoDiv = () => (
     <div className="text-md relative flex items-center gap-2">
       <img
-        src={fileUrl || '/assets/avatar.png'}
+        src={fileUrl || './assets/avatar.png'}
         alt="Profile"
         className="hidden h-10 w-10 rounded-full object-contain md:block"
       />
-      <h1 className="hidden lg:block">{`Hey! ${userData?.name || 'Guest'}`}</h1>
+      <h1 className="hidden lg:block">{`Hey! ${userData?.name}`}</h1>
     </div>
   );
 
@@ -154,12 +149,12 @@ const Header = () => {
                   <div className="relative flex flex-col gap-5">
                     <div className="flex items-center gap-3 border-b border-gray-700 pb-3 lg:hidden">
                       <img
-                        src={fileUrl || '/assets/avatar.png'}
+                        src={fileUrl || './assets/avatar.png'}
                         alt="Profile"
                         className="h-12 w-12 rounded-full object-cover"
                       />
                       <h1 className="text-lg font-semibold text-black">
-                        {userData?.name || 'Guest'}
+                        {userData?.name}
                       </h1>
                       <IoClose
                         className="absolute right-0 top-0 rounded-full bg-slate-700 p-1 text-2xl text-white"
@@ -200,7 +195,7 @@ const Header = () => {
                         Library
                       </li>
                       <li
-                        className="cursor-pointer rounded-md px-3 py-2 transition-all duration-200 hover:bg-gray-800 hover:underline"
+                        className="cursor-pointer rounded-md px-3 py-2 transition-all duration-200 hover:underline"
                         onClick={() => {
                           navigate('/add-blog');
                           setShowOptions(false);
@@ -243,12 +238,12 @@ const Header = () => {
                   <div className="relative flex flex-col gap-5">
                     <div className="flex items-center gap-3 border-b border-gray-700 pb-3 lg:hidden">
                       <img
-                        src={fileUrl || '/assets/avatar.png'}
+                        src={fileUrl || './assets/avatar.png'}
                         alt="Profile"
                         className="h-12 w-12 rounded-full object-cover"
                       />
                       <h1 className="text-lg font-semibold text-black">
-                        {userData?.name || 'Guest'}
+                        {userData?.name}
                       </h1>
                       <IoClose
                         className="absolute right-0 top-0 rounded-full bg-slate-700 p-1 text-2xl text-white"

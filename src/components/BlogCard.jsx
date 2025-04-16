@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from './Button';
+import HTMLReactParser from 'html-react-parser/lib/index';
 
 const BlogCard = ({ blog, showEditButton }) => {
   const userData = useSelector((state) => state.auth.userData);
@@ -61,12 +62,13 @@ const BlogCard = ({ blog, showEditButton }) => {
             ? format(new Date(blog.$createdAt), 'MMMM d, yyyy')
             : 'Unknown Date'}
         </p>
-        <h1 className="text-lg font-semibold text-gray-800 md:text-xl lg:text-2xl">
+        <h1 className="line-clamp-2 text-lg font-semibold text-gray-800 md:text-xl lg:text-2xl">
           {blog.title}
         </h1>
-        <p className="leading-2 line-clamp-3 text-sm text-gray-700 md:text-base md:leading-6">
-          {blog.content}
-        </p>
+        <div className="prose line-clamp-3 text-gray-700">
+          {HTMLReactParser(blog.content)}
+        </div>
+
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img

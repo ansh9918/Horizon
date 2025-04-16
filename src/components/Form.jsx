@@ -1,18 +1,22 @@
-import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useState, useId } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useCallback, useEffect, useState, useId, useRef } from 'react';
 import service from '../appwrite/service';
 import { Input, Button, Select } from './index';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { Editor } from '@tinymce/tinymce-react';
+import conf from '../conf/conf';
 
 const Form = ({ post }) => {
   const id = useId();
   const {
     register,
+    control,
     handleSubmit: onSubmit,
     watch,
     setValue,
+    getValues,
     reset,
   } = useForm({
     defaultValues: {
@@ -23,10 +27,10 @@ const Form = ({ post }) => {
       category: '',
     },
   });
-
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   const [previewImage, setPreviewImage] = useState('');
+  const editorRef = useRef(null);
 
   useEffect(() => {
     if (post) {
@@ -136,11 +140,49 @@ const Form = ({ post }) => {
           />
           <div className="flex flex-col gap-1">
             <label htmlFor={id}>Content :</label>
-            <textarea
-              id={id}
-              className="w-full rounded-md border border-gray-300 p-2"
-              {...register('content', { required: 'Content is required' })}
-              rows={10}
+            <Controller
+              name="content"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Editor
+                  apiKey={conf.tinymceKey}
+                  onInit={(_evt, editor) => (editorRef.current = editor)}
+                  value={value}
+                  initialValue={getValues('content')}
+                  init={{
+                    initialValue: getValues('content'),
+                    height: 500,
+                    menubar: true,
+                    plugins: [
+                      'image',
+                      'advlist',
+                      'autolink',
+                      'lists',
+                      'link',
+                      'image',
+                      'charmap',
+                      'preview',
+                      'anchor',
+                      'searchreplace',
+                      'visualblocks',
+                      'code',
+                      'fullscreen',
+                      'insertdatetime',
+                      'media',
+                      'table',
+                      'code',
+                      'help',
+                      'wordcount',
+                      'anchor',
+                    ],
+                    toolbar:
+                      'undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help',
+                    content_style:
+                      'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                  }}
+                  onEditorChange={onChange}
+                />
+              )}
             />
           </div>
         </div>
@@ -149,7 +191,7 @@ const Form = ({ post }) => {
             label={'Featured Image :'}
             type={'file'}
             className={'w-full rounded-md border border-gray-300 p-2'}
-            accept={'image/png, image/jpg, image/jpeg, image/gif'}
+            accept={'image/png, image/jpg, image/jpeg, image/gif, image/webp'}
             {...register('image')}
           />
           {previewImage && (
