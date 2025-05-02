@@ -1,4 +1,4 @@
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import service from '../appwrite/service';
 import Loader from '../components/Loader';
@@ -19,6 +19,7 @@ const Blog = () => {
 
   useEffect(() => {
     const checkFavorite = async () => {
+      if (!userData?.$id || !result?.$id) return;
       try {
         const favorites = await service.getFavouriteBlogs(userData.$id);
         const isFav = favorites.some((fav) => fav.$id === result.$id);
@@ -29,7 +30,7 @@ const Blog = () => {
     };
 
     checkFavorite();
-  }, [result.$id, userData.$id]);
+  }, [result?.$id, userData?.$id]);
 
   const addFavourite = async () => {
     try {
@@ -139,26 +140,15 @@ const Blog = () => {
   console.log(result.content);
 
   return (
-    <section className="flex min-h-screen animate-slideup flex-col gap-10 px-4 py-10 md:px-10 lg:px-28">
-      <div className="flex flex-col gap-7 lg:flex-row">
-        <div className="flex w-full flex-col space-y-10 lg:w-3/4">
-          <div className="flex flex-col">
-            <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-semibold capitalize md:text-4xl lg:text-5xl">
-                {result.title}
-              </h1>
-              <FiHeart
-                className={`h-5 w-5 cursor-pointer text-2xl transition-colors ${
-                  isFavorite ? 'fill-red-700 text-red-700' : 'bg-transparent'
-                }`}
-                onClick={(e) => {
-                  e.preventDefault(); // Prevents navigating to the blog post when clicking the heart icon
-                  addFavourite();
-                }}
-              />
-            </div>
-
-            <p className="mt-3 font-medium">
+    <section className="flex min-h-screen animate-slideup flex-col gap-10 px-4 py-10 md:px-10 lg:px-40">
+      <div className="flex flex-col gap-10">
+        {/* Blog Header */}
+        <div className="flex flex-col items-start gap-5">
+          <h1 className="text-3xl font-semibold capitalize md:text-4xl lg:text-5xl">
+            {result.title}
+          </h1>
+          <div className="flex w-full items-center justify-between">
+            <p className="font-medium text-gray-600">
               {result.$createdAt
                 ? format(
                     new Date(result.$createdAt),
@@ -166,67 +156,72 @@ const Blog = () => {
                   ).toUpperCase()
                 : 'Invalid Time'}
             </p>
-            <img
-              src={result.featuredImageUrl}
-              alt=""
-              className="mt-4 h-[30vh] rounded-lg md:h-[45vh] lg:h-[60vh]"
+            <FiHeart
+              className={`h-6 w-6 cursor-pointer text-2xl transition-colors ${
+                isFavorite ? 'fill-red-700 text-red-700' : 'bg-transparent'
+              }`}
+              onClick={(e) => {
+                e.preventDefault();
+                addFavourite();
+              }}
             />
-            <div className="prose">{HTMLReactParser(result.content)}</div>
           </div>
-          <div className="flex w-full flex-col items-start gap-5 pt-10 lg:hidden lg:w-1/4">
+        </div>
+
+        {/* Featured Image */}
+        <img
+          src={result.featuredImageUrl}
+          alt="Featured"
+          className="h-[30vh] w-full rounded-lg object-cover md:h-[45vh] lg:h-[60vh]"
+        />
+
+        {/* Blog Content */}
+        <div className="prose max-w-none">
+          {HTMLReactParser(`${result.content}`)}
+        </div>
+
+        {/* Author Info */}
+        <div className="flex items-center gap-5 border-t border-gray-200 pt-5">
+          <img
+            src={result.authorImage}
+            alt="Author"
+            className="h-14 w-14 rounded-full"
+          />
+          <div>
+            <p className="font-medium">{result.author}</p>
             <h4 className="rounded-full bg-gray-300 p-1 px-2 text-center text-sm font-medium md:p-2 md:px-4 md:text-base">
               {result.category}
             </h4>
-            <div className="flex items-center gap-5">
-              <img
-                src={result.authorImage}
-                alt=""
-                className="h-14 w-14 rounded-full"
-              />
-              <p className="font-medium">{result.author}</p>
-            </div>
           </div>
-          <div className="flex flex-col gap-5 border-t border-t-gray-200 py-3">
+        </div>
+
+        {/* Related Blogs */}
+        <div className="flex flex-col gap-5">
+          <h2 className="text-xl font-semibold">Related Blogs</h2>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {allResult.map((blog) => (
-              <div
-                key={blog.$id}
-                className="flex flex-col gap-5 border-b border-b-gray-200 py-5 md:flex-row"
-              >
-                <img
-                  src={blog.featuredImageUrl}
-                  alt=""
-                  className="h-[20vh] w-full rounded-lg md:h-[25vh] md:w-1/3"
-                />
-                <div className="flex w-full flex-col gap-2 md:w-2/3">
-                  <p className="text-sm">
+              <Link key={blog.$id} to={`/post/${blog.slug}`} className="group">
+                <div className="flex flex-col gap-3 rounded-lg border p-4 shadow-sm transition-shadow hover:shadow-md">
+                  <img
+                    src={blog.featuredImageUrl}
+                    alt="Blog Thumbnail"
+                    className="h-[20vh] w-full rounded-lg object-cover"
+                  />
+                  <p className="text-sm text-gray-500">
                     {format(
                       new Date(blog.$createdAt),
                       'MMMM d, yyyy',
                     ).toUpperCase()}
                   </p>
-                  <h1 className="text-lg font-medium capitalize md:text-xl">
+                  <h3 className="text-lg font-medium capitalize">
                     {blog.title}
-                  </h1>
-                  <div className="prose line-clamp-3">
+                  </h3>
+                  <div className="prose line-clamp-3 text-gray-700">
                     {HTMLReactParser(blog.content)}
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
-          </div>
-        </div>
-
-        <div className="hidden w-full flex-col items-start gap-5 pt-10 lg:flex lg:w-1/4">
-          <h4 className="rounded-full bg-gray-300 p-1 px-2 text-center text-sm font-medium md:p-2 md:px-4 md:text-base">
-            {result.category}
-          </h4>
-          <div className="flex items-center gap-5">
-            <img
-              src={result.authorImage}
-              alt=""
-              className="h-14 w-14 rounded-full"
-            />
-            <p className="font-medium">{result.author}</p>
           </div>
         </div>
       </div>

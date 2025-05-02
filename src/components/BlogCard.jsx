@@ -51,7 +51,7 @@ const BlogCard = ({ blog, showEditButton }) => {
 
   return (
     <Link to={`/post/${blog.slug}`}>
-      <div className="relative flex w-full cursor-pointer flex-col gap-1 rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md lg:gap-2">
+      <div className="relative flex w-full cursor-pointer flex-col gap-1 rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-sm transition-shadow hover:shadow-md lg:gap-2">
         <img
           src={blog.featuredImageUrl}
           alt=""
@@ -62,11 +62,11 @@ const BlogCard = ({ blog, showEditButton }) => {
             ? format(new Date(blog.$createdAt), 'MMMM d, yyyy')
             : 'Unknown Date'}
         </p>
-        <h1 className="line-clamp-2 text-lg font-semibold text-gray-800 md:text-xl lg:text-2xl">
+        <h1 className="line-clamp-2 text-lg font-medium text-gray-800 md:text-xl lg:text-2xl">
           {blog.title}
         </h1>
         <div className="prose line-clamp-3 text-gray-700">
-          {HTMLReactParser(blog.content)}
+          {HTMLReactParser(`${blog.content}`)}
         </div>
 
         <div className="mt-3 flex items-center justify-between">
